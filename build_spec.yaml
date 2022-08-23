@@ -1,0 +1,24 @@
+version: 0.1
+component: build
+timeoutInSeconds: 6000
+runAs: root
+shell: bash
+
+# For this to work the folloing params need to be set in the pipeline
+# ignore for now GITHUB_PATH_SECRET_OCID - the OCID of the vault secret containing the users github parsonal access token
+# ignore for now GITHUB_USERNAME = the OCID of the vault secret contining the users github usename
+# OCIR_HOST - The hostname part of the image tags for the image registry to use 
+# OCIR_STORAGE_NAMEPACE - The tenancy storage namespace part of the image tag
+
+steps:
+  - type: Command
+    name: "Build Source and pack into container image"
+    timeoutInSeconds: 1800
+    command: |
+      cd ${OCI_PRIMARY_SOURCE_DIR}
+      echo Running docker update - Working in `pwd`
+      docker build  --tag ems-app:latest --file Dockerfile . 
+      echo images are
+      docker images
+   
+# This basically preserves and "names" the artifacts below (if it's not here it gets junked) so the deliver artifact stage can handle them
